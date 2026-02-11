@@ -10,34 +10,41 @@ The workflow combines:
 
 All figures in the paper can be reproduced following the steps below.
 
-git clone https://github.com/NuWro/nuwro.git
-cd nuwro
-git checkout d67a4d9a9360fc642deb548328c28e23efc5bffb
+1. Clone repository
+2. Download ROOT package from Release
+3. Extract ROOT files, locate them under corresponding directory
 
-Copy the modified files from this repository into the NuWro directory.
+  tar -xzf WEFT_NSI_root_files_v1.0.tar.gz
+  
+4. Get NuWro
+  git clone https://github.com/NuWro/nuwro.git
+  cd nuwro
+  git checkout d67a4d9a9360fc642deb548328c28e23efc5bffb
+
+5. Copy the modified files from this repository into the NuWro directory.
 - Files located under `nuwro/src/` must be copied into your `nuwro/src/` directory
 - Files located outside `src/` in this repository should be placed at the corresponding top-level location in the NuWro directory
 
-make clean && make
+6. Make NuWro
+  make clean && make
 
 Figure 1:
-python catch_sigma.py
-python plot_ratio.py
+  python catch_sigma.py
+  python plot_ratio.py
 
 Figure 2:
-nuwro -i params_SM.txt -o SM.root
-nuwro -i params_SM_R.txt -o SM_R.root
-myroot -b -q 'plotcostheta.c()'
+  nuwro -i params_SM.txt -o SM.root
+  nuwro -i params_SM_R.txt -o SM_R.root
+  myroot -b -q 'plotcostheta.c()'
 
 Figure 3:
-cd ../atn
-bash run_fig3.sh
+  cd ../atn
+  bash run_fig3.sh
 
 Figure 4:
-bash run_fig4.sh
+  bash run_fig4.sh
 
-Figure 5:
-(The input text file is constructed by collecting Δχ²_bias = χ²(truth) − χ²_min from the outputs of run_fig4.sh)
-python plot_epsilon_chi2.py
+Figure 5: (The input text file is constructed by collecting Δχ²_bias = χ²(truth) − χ²_min from the outputs of run_fig4.sh)
+  python plot_epsilon_chi2.py
 
 
