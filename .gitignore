@@ -1,0 +1,11 @@
+*.root
+*.d
+
+*.root
+
+analysis-*.root
+asimov_dataset.root
+
+.vscode/
+
+*.d
