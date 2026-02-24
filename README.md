@@ -13,8 +13,6 @@ All figures in the paper can be reproduced following the steps below.
 1. Clone repository
 2. Download ROOT package from Release
 3. Extract ROOT files, locate them under corresponding directory
-
-  tar -xzf WEFT_NSI_root_files_v1.0.tar.gz
   
 4. Get NuWro
   git clone https://github.com/NuWro/nuwro.git
@@ -38,7 +36,7 @@ Figure 2:
   myroot -b -q 'plotcostheta.c()'
 
 Figure 3:
-  cd ../atn
+  - move to the atn folder
   bash run_fig3.sh
 
 Figure 4:
