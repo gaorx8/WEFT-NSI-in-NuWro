@@ -13,7 +13,7 @@ import numpy as np
 
 PARAM_FILE = pathlib.Path("params.txt")        
 NUWRO_EXEC = pathlib.Path("nuwro")              
-OUT_TABLE  = pathlib.Path("weft_sigma.txt")     
+OUT_TABLE  = pathlib.Path("weft_sigma_mu.txt")     
 
 # ENERGIES_GEV  = [0.2, 0.25, 0.3, 0.4, 0.6, 0.8, 1.0, 1.2, 1.6, 2, 2.8, 3.6,
 #                  4.4, 5.2, 6, 7, 8, 9, 10]
@@ -95,3 +95,4 @@ for Ev in ENERGIES_MEV:
         f.write("\t".join(row) + "\n")
 
     print(f"✓ {Ev/1000:.2f} GeV done")
+
