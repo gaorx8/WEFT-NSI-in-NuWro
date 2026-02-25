@@ -11,19 +11,17 @@ The workflow combines:
 All figures in the paper can be reproduced following the steps below.
 
 1. Clone repository
-2. Download ROOT package from Release
-3. Extract ROOT files, locate them under corresponding directory
-  
-4. Get NuWro
+ 
+2. Get NuWro
   git clone https://github.com/NuWro/nuwro.git
   cd nuwro
   git checkout d67a4d9a9360fc642deb548328c28e23efc5bffb
 
-5. Copy the modified files from this repository into the NuWro directory.
+3. Copy the modified files from this repository into the NuWro directory.
 - Files located under `nuwro/src/` must be copied into your `nuwro/src/` directory
 - Files located outside `src/` in this repository should be placed at the corresponding top-level location in the NuWro directory
 
-6. Make NuWro
+4. Make NuWro
   make clean && make
 
 Figure 1:
