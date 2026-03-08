@@ -189,7 +189,7 @@ static void draw_overlay_new(TH2* raw_chi2_fit,          // SM-only fit surface
     const double dy = 0.04;
     const int    kF = 42;
 
-    auto t0 = new TLatex(xN, yN, Form("%s, assuming no CPV", order != "_io" ? "NO" : "IO"));
+    auto t0 = new TLatex(xN, yN, Form("Normal Ordering, assuming no CPV"));
     t0->SetNDC(); t0->SetTextFont(kF); t0->SetTextSize(0.026); t0->SetTextAlign(13);
     t0->Draw();
 
@@ -201,7 +201,7 @@ static void draw_overlay_new(TH2* raw_chi2_fit,          // SM-only fit surface
     tE->SetNDC(); tE->SetTextFont(kF); tE->SetTextSize(0.026); tE->SetTextAlign(13);
     tE->Draw();
 
-    auto leg = new TLegend(0.19, 0.16, 0.48, 0.40);
+    auto leg = new TLegend(0.19, 0.16, 0.42, 0.40);
     leg->SetTextSize(0.022);
     leg->SetMargin(0.18);
 
@@ -214,7 +214,7 @@ static void draw_overlay_new(TH2* raw_chi2_fit,          // SM-only fit surface
         leg->AddEntry(d90, "90% C.L.", "L");
         leg->AddEntry(d95, "95% C.L.", "L");
     }
-    leg->AddEntry(m_truth, "Truth (Data: SM+NSI)", "P");
+    leg->AddEntry(m_truth, "Truth (SM + NSI)", "P");
     leg->AddEntry(m_best,  "Best fit (SM only)",   "P");
     leg->Draw();
 
@@ -254,7 +254,7 @@ auto plot_analysis_multiple(TString order) -> void {
 
     TString title_text = "";
     TString eps_text   = "#epsilon_{R} = 4 #times 10^{-2}";
-    TString unc_text   = "1% flux & xsec uncertainties";
+    TString unc_text   = "1% flux and cross-section uncertainties";
     TString out_png    = Form("p_bias_R_0.04%s.pdf", order.Data());
 
     auto c = new TCanvas("atn_ana","atn_ana", (int)(1400/0.98), 1400);
