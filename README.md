@@ -2,6 +2,8 @@ Event-level CCQE detection NSI in NuWro and impact on oscillation-parameter extr
 
 This repository provides the implementation used in our paper to study CCQE detection NSI effects within the WEFT framework.
 
+The model ROOT files used in this analysis are available on Zenodo: https://doi.org/10.5281/zenodo.18906516
+
 The workflow combines:
 1.	NuWro (fixed commit)
 2.	Oscillated atmospheric flux (nuSQUIDS + HKKM)
