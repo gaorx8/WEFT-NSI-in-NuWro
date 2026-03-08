@@ -18,9 +18,7 @@ auto analysis(double model_unc, double xsec_unc, TString order) -> void {
     const double delta_cp_max{360};
     const int n_delta_cp{100};
 
-    // -------------------------
-    // Open input files
-    // -------------------------
+
     TFile model_file{"flux_model_xsec_res/atnu_mu_all" + order + "_model_xsec_res.root"};
     if (model_file.IsZombie()) {
         std::cerr << "[ERR] cannot open model file\n";
@@ -33,7 +31,6 @@ auto analysis(double model_unc, double xsec_unc, TString order) -> void {
         return;
     }
 
-    // NOTE: use fixed-format filename to avoid mismatched names
     const TString out_name = Form("analysis-%0.6f-%0.6f.root", model_unc, xsec_unc);
     TFile output_file{out_name, "RECREATE", "",
                       ROOT::RCompressionSetting::EDefaults::kUseGeneralPurpose};
@@ -42,9 +39,6 @@ auto analysis(double model_unc, double xsec_unc, TString order) -> void {
         return;
     }
 
-    // -------------------------
-    // Load data histogram (do NOT own it via unique_ptr)
-    // -------------------------
     TH1* data = data_file.Get<TH1>("data");
     if (!data) {
         std::cerr << "[ERR] cannot find TH1 'data' in asimov_dataset.root\n";
@@ -52,7 +46,6 @@ auto analysis(double model_unc, double xsec_unc, TString order) -> void {
     }
 
     const auto Cut = [&](int /*bin*/) {
-        // return data->GetXaxis()->GetBinUpEdge(bin) > 0;
         return true;
     };
 
@@ -63,10 +56,6 @@ auto analysis(double model_unc, double xsec_unc, TString order) -> void {
         if (Cut(k)) n_event_used += data->GetBinContent(k);
     }
 
-    // -------------------------
-    // Create output histograms
-    // IMPORTANT: lock output directory, then detach hist from directory to avoid gDirectory issues
-    // -------------------------
     output_file.cd();
 
     TH2D log_likelihood{"log_likelihood", "log_likelihood",
@@ -77,20 +66,15 @@ auto analysis(double model_unc, double xsec_unc, TString order) -> void {
                   n_theta, theta_min, theta_max,
                   n_delta_cp, delta_cp_min, delta_cp_max};
 
-    // Detach from any TFile directory ownership (robust against gDirectory switching)
     log_likelihood.SetDirectory(nullptr);
     raw_chi2.SetDirectory(nullptr);
 
-    // -------------------------
-    // Scan grid
-    // -------------------------
     double best_chi2 = std::numeric_limits<double>::infinity();
     int best_i = -1, best_j = -1;
 
     for (int i = 1; i <= n_theta; ++i) {
         for (int j = 1; j <= n_delta_cp; ++j) {
 
-            // --- Get model hist pointer from model_file (owned by model_file) ---
             TH1* htmp = model_file.Get<TH1>(TString::Format("atn_%d_%d", i, j));
             if (!htmp) {
                 std::cerr << "[ERR] cannot find model hist atn_" << i << "_" << j
@@ -98,7 +82,6 @@ auto analysis(double model_unc, double xsec_unc, TString order) -> void {
                 return;
             }
 
-            // --- Clone to local owned hist so we can scale safely and independent of file ---
             std::unique_ptr<TH1> model{ (TH1*)htmp->Clone(Form("model_%d_%d_tmp", i, j)) };
             model->SetDirectory(nullptr);
 
@@ -109,7 +92,6 @@ auto analysis(double model_unc, double xsec_unc, TString order) -> void {
 
             const double model_int = model->Integral();
             if (model_int <= 0) {
-                // Avoid divide-by-zero; set huge chi2
                 const auto paramIndex = log_likelihood.GetBin(i, j);
                 log_likelihood.SetBinContent(paramIndex, -1e100);
                 log_likelihood.SetBinError(paramIndex, 0);
@@ -118,10 +100,8 @@ auto analysis(double model_unc, double xsec_unc, TString order) -> void {
                 continue;
             }
 
-            // Normalize model to data total events
             model->Scale(n_event / model_int);
 
-            // --- compute binned Gaussian chi2 with combined (stat + sys) variance ---
             double ll{};
             for (int k = 1; k <= data->GetNcells(); ++k) {
                 if (!Cut(k)) continue;
@@ -136,7 +116,7 @@ auto analysis(double model_unc, double xsec_unc, TString order) -> void {
                 if (denom <= 0) continue;
 
                 const double numer = TMath::Sq(n - mu);
-                ll -= (numer / denom) / 2.0; // ll = -0.5*chi2
+                ll -= (numer / denom) / 2.0;
             }
 
             const double chi2_here = -2.0 * ll;
@@ -156,9 +136,6 @@ auto analysis(double model_unc, double xsec_unc, TString order) -> void {
         }
     }
 
-    // -------------------------
-    // Print best fit + save best-fit spectrum (optional)
-    // -------------------------
     if (best_i > 0 && best_j > 0) {
         const double theta_hat   = log_likelihood.GetXaxis()->GetBinCenter(best_i);
         const double delta_hat   = log_likelihood.GetYaxis()->GetBinCenter(best_j);
@@ -177,7 +154,6 @@ auto analysis(double model_unc, double xsec_unc, TString order) -> void {
                   << "  (ixmin,iymin)=(" << ixmin << "," << iymin << ")"
                   << "  (theta23,deltaCP)=(" << theta_hat_hist << "," << delta_hat_hist << ")\n";
 
-        // Save best-fit model spectrum PNG (still optional)
         TH1* hbest_src = model_file.Get<TH1>(Form("atn_%d_%d", best_i, best_j));
         if (hbest_src) {
             std::unique_ptr<TH1> hbest{ (TH1*)hbest_src->Clone("best_model") };
@@ -186,15 +162,11 @@ auto analysis(double model_unc, double xsec_unc, TString order) -> void {
             TCanvas c("bestfit","bestfit",1200,800);
             hbest->SetLineWidth(2);
             hbest->Draw("HIST");
-            // c.SaveAs(Form("best_model_%d_%d.png", best_i, best_j));
         }
     } else {
         std::cout << "[WARN] Best-fit not found (indices invalid).\n";
     }
 
-    // -------------------------
-    // Write outputs (critical: cd to output_file, overwrite, flush, close)
-    // -------------------------
     output_file.cd();
     log_likelihood.Write("log_likelihood", TObject::kOverwrite);
     raw_chi2.Write("raw_chi2", TObject::kOverwrite);

@@ -20,12 +20,13 @@ All figures in the paper can be reproduced following the steps below.
 3. Copy the modified files from this repository into the NuWro directory.
 - Files located under `nuwro/src/` must be copied into your `nuwro/src/` directory
 - Files located outside `src/` in this repository should be placed at the corresponding top-level location in the NuWro directory
+- Replace original files
 
 4. Make NuWro
   make clean && make
 
 Figure 1:
-  python catch_sigma.py
+  python catch_sigma.py (It takes a while.)
   python plot_ratio.py
 
 Figure 2:
@@ -34,13 +35,14 @@ Figure 2:
   myroot -b -q 'plotcostheta.c()'
 
 Figure 3:
-  - move to the atn folder
+  - Download the model ROOT files from Zenodo and place them in `atn/atn_ana/flux_model_xsec`
+  - cd to the atn folder
   bash run_fig3.sh
 
 Figure 4:
   bash run_fig4.sh
 
-Figure 5: (The input text file is constructed by collecting Δχ²_bias = χ²(truth) − χ²_min from the outputs of run_fig4.sh)
+Figure 5: (The input text file is constructed by collecting Delta chi2_bias = chi2_SM(theta_true, delta_true) - chi2_SM,min from the outputs of run_fig4.sh)
   python plot_epsilon_chi2.py
 
 

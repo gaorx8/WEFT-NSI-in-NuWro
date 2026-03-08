@@ -5,13 +5,13 @@
 #include <iostream>
 #include <unordered_set>
 
-auto smear_model(TString flavor, TString order) -> void {
+auto smear_model_R(TString flavor, TString order) -> void {
     const int nTheta{100};
     const int nDeltaCP{100};
 
-    TFile model_file{"../flux_model_xsec/atnu_" + flavor + order + "_model_xsec.root"};
-    TFile resolution_file{"resolution_model_nu_" + flavor + ".root"};
-    TFile output_file{"atnu_" + flavor + order + "_model_xsec_res.root", "RECREATE",
+    TFile model_file{"../flux_model_xsec/atnu_" + flavor + order + "_model_xsec_R.root"};
+    TFile resolution_file{"resolution_model_nu_" + flavor + "_R.root"};
+    TFile output_file{"atnu_" + flavor + order + "_model_xsec_res_R.root", "RECREATE",
                       "", ROOT::RCompressionSetting::EDefaults::kUseGeneralPurpose};
 
     const auto model_template{model_file.Get<TH1>("atn_1_1")};

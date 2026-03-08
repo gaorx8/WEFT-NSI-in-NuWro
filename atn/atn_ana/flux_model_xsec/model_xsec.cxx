@@ -246,7 +246,7 @@ static void apply_one(const std::string& input_root,
 }
 
 void model_xsec_from_txt_p1_run(int combined_case = 0,      // 0=R,1=S0,2=S1,3=P,4=T
-                                double epsilon   = 0.,
+                                double epsilon   = 0,
                                 int nTheta       = 100,
                                 int nDeltaCP     = 100,
                                 bool allow_negative = true,

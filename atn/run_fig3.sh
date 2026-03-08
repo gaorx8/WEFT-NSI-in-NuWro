@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
  
-# ASIMOV_NPOT=139000
 ASIMOV_NPOT=1000000
 
 echo "Start in $(pwd)..."

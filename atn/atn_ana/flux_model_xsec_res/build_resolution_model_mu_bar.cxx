@@ -12,9 +12,7 @@ constexpr auto deg{pi / 180};
 constexpr auto ln10{2.30258509299404568402};
 
 auto sigma_E(double E) -> double {
-    // return 0.03 * std::sqrt(E * 1000) / 1000;
-    // return 0.043 * std::sqrt(E) + 0.011; // nu_mu
-    return 0.049 * std::sqrt(E) + 0.006; // nu_mu_bar
+    return 0.049 * std::sqrt(E) + 0.006;
 }
 
 auto resolution_kernel_pdf(const double var[1], const double param[1]) -> double {
@@ -43,13 +41,11 @@ auto build_resolution_model_mu_bar() -> void {
     TF1 res_ker_pdf{"resolution_kernel_pdf", resolution_kernel_pdf,
                     -delta_lgE_bound, delta_lgE_bound, 1};
 
-    constexpr auto kernel_range_factor{4}; // n sigma range
+    constexpr auto kernel_range_factor{4};
 
     for (auto i{1}; i <= n_lgE; ++i) {
-        // bin center
         const auto lgE0{lgE_axis->GetBinCenter(i)};
         res_ker_pdf.SetParameter(0, lgE0);
-        // calculate lgE kernel range
         const auto E0{std::pow(10, lgE0)};
         const auto sigma_lgE0{sigma_E(E0) / (E0 * ln10)};
         const auto ker_lgE_index_range{std::max(2, static_cast<int>(kernel_range_factor * sigma_lgE0 / width_lgE) + 1)};

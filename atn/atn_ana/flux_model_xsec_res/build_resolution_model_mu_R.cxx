@@ -25,8 +25,8 @@ auto resolution_kernel_pdf(const double var[1], const double param[1]) -> double
     return ln10 * E * ROOT::Math::gaussian_pdf(E - E0, sigma_E(E0));
 }
 
-auto build_resolution_model_mu() -> void {
-    TFile model_file{"../flux_model_xsec/atnu_mu_model_xsec.root"};
+auto build_resolution_model_mu_R() -> void {
+    TFile model_file{"../flux_model_xsec/atnu_mu_model_xsec_R.root"};
     std::unique_ptr<TH1> model{model_file.Get<TH1>("atn_1_1")};
     const auto n_lgE{model->GetNbinsX()};
     const auto lgE_axis{model->GetXaxis()};
@@ -34,7 +34,7 @@ auto build_resolution_model_mu() -> void {
     const auto lgE_max{lgE_axis->GetBinUpEdge(model->GetNbinsX())};
     const auto width_lgE{lgE_axis->GetBinWidth(1)};
 
-    TFile output_file{"resolution_model_nu_mu.root", "RECREATE",
+    TFile output_file{"resolution_model_nu_mu_R.root", "RECREATE",
                       "", ROOT::RCompressionSetting::EDefaults::kUseGeneralPurpose};
 
     const auto delta_lgE_bound{std::max(std::abs(lgE_min), std::abs(lgE_max))};
